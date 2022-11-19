@@ -26,6 +26,24 @@ class Book:
 class BookManager:
     def __init__(self):
         self.books = []
+        # Last line of file must be a line break
+        filename = "DataIndex.txt"
+        # Index of book, start from 1
+        tt = 0
+
+        with open(filename, 'r', encoding='UTF-8') as file:
+            for line in file:
+                agrs = line.split(' - ')
+                tt = tt + 1
+                # Tên sản phẩm - tác giả - thể loại - thời lượng - đường dẫn tới speech file
+                index = tt
+                name = agrs[0]
+                author = agrs[1]
+                bookType = agrs[2]
+                length = agrs[3]
+                dir = agrs[4][:-1]
+                book = Book(index, name, author, bookType, length, dir)
+                self.addBook(book)
     def addBook(self, book):
         self.books.append(book)
     def listOfBook(self):
@@ -45,24 +63,3 @@ class BookManager:
         # Find the similar to book author if not found
         t1 = next((x for x in self.books if unidecode.unidecode(x.author) == author_decode), None)
         return t if t != None else t1
-
-# Last line of file must be a line break
-
-filename = "DataIndex.txt"
-books = BookManager()
-# Index of book, start from 1
-tt = 0
-
-with open(filename, 'r', encoding='UTF-8') as file:
-    for line in file:
-        agrs = line.split(' - ')
-        tt = tt + 1
-        # Tên sản phẩm - tác giả - thể loại - thời lượng - đường dẫn tới speech file
-        index = tt
-        name = agrs[0]
-        author = agrs[1]
-        bookType = agrs[2]
-        length = agrs[3]
-        dir = agrs[4][:-1]
-        book = Book(index, name, author, bookType, length, dir)
-        books.addBook(book)
