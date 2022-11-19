@@ -52,14 +52,23 @@ class BookManager:
     def searchByIndex(self, index):
         return self.books[index-1]
     def searchByName(self, name):
-        name_decode = unidecode.unidecode(name)
-        t = next((x for x in self.books if x.name == name), None)
-        # Find the similar to book name if not found
-        t1 = next((x for x in self.books if unidecode.unidecode(x.name) == name_decode), None)
-        return t if t != None else t1
+        # name_decode = unidecode.unidecode(name)
+        list_book = []
+        for x in self.books:
+            if (x.name == name):
+                list_book.append(x)
+        return list_book
     def searchByAuthor(self, author):
-        author_decode = unidecode.unidecode(author)
-        t = next((x for x in self.books if x.author == author), None)
-        # Find the similar to book author if not found
-        t1 = next((x for x in self.books if unidecode.unidecode(x.author) == author_decode), None)
-        return t if t != None else t1
+        # author_decode = unidecode.unidecode(author)
+        list_book = []
+        for x in self.books:
+            if (x.author == author):
+                list_book.append(x)
+        return list_book
+    def searchByNameAndAuthor(self, name, author):
+        list_book = []
+        list_book_by_name = self.searchByName(name)
+        for x in list_book_by_name:
+            if (x.author == author):
+                list_book.append(x)
+        return list_book
