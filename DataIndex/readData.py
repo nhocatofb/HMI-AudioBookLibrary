@@ -46,7 +46,15 @@ class BookManager:
                 self.addBook(book)
     def addBook(self, book):
         self.books.append(book)
-    def listOfBook(self):
+    def deleteBook(self, list_book):
+        if (type(list_book) == Book):
+            if list_book in self.books:
+                self.books.remove(list_book)
+                return
+        for book in list_book:
+            if book in self.books:
+                self.books.remove(book)
+    def getListOfBook(self):
         for book in self.books:
             print(book.getFull())
     def searchByIndex(self, index):
@@ -72,3 +80,4 @@ class BookManager:
             if (x.author == author):
                 list_book.append(x)
         return list_book
+    
