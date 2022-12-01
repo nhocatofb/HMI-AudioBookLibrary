@@ -1,4 +1,4 @@
-import unidecode
+
 
 class Book:
     def __init__(self, index, name, author, bookType, length, dir):
@@ -27,7 +27,7 @@ class BookManager:
     def __init__(self):
         self.books = []
         # Last line of file must be a line break
-        filename = "DataIndex.txt"
+        filename = "./DataIndex/DataIndex.txt"
         # Index of book, start from 1
         tt = 0
 
