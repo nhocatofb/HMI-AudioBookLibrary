@@ -11,13 +11,17 @@ root.configure(bg='#0f1a2b')
 root.resizable(False,False)
 
 mixer.init()
+
+playlistDir=os.getcwd()+"/Data/"
 # function
 def open_folder():
     #to open a file  
     temp_song=filedialog.askopenfilenames(title="Choose a song", filetypes=(("mp3 Files","*.mp3"),))
     ##loop through every item in the list to insert in the listbox
     for s in temp_song:
-       s=s.replace("D:/Ly thuyet/Nam 4/HMI/HMI-AudioBookLibrary/Data/","")
+       #s=s.replace("D:/Ly thuyet/Nam 4/HMI/HMI-AudioBookLibrary/Data/","")
+       tmp=s.rindex("/")
+       s=s[tmp+1:]
        print(s)
        playlist.insert(END,s)
 
@@ -36,11 +40,10 @@ def open_folder():
                 playlist.insert(END,song)
 """
 def play_song():
-    os.chdir(path="D:/Ly thuyet/Nam 4/HMI/HMI-AudioBookLibrary/Data/")
+    os.chdir(path=playlistDir)
     music_name=playlist.get(ACTIVE)
     mixer.music.load(playlist.get(ACTIVE))
     mixer.music.play()
-    print(music_name[0:-4])
     music.config(text=music_name[0:-4])
 
 #name
