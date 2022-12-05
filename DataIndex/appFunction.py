@@ -17,7 +17,7 @@ def pause():
     elapsed = now - stime
     mixer.music.pause()
     is_paused = True
-    
+
 def resume():
     global is_paused, stime, elapsed
     now = time.time()
@@ -47,7 +47,7 @@ def backward(x):
         # pygame.mixer.music.rewind()
         # pygame.mixer.music.set_pos(elapsed - delta)
         mixer.music.play(start=elapsed-delta)
-        stime += delta 
+        stime += delta
 def forward(x, total_length):
     global stime, is_paused, elapsed
     if not is_paused:
@@ -56,5 +56,24 @@ def forward(x, total_length):
         mixer.music.play(start=elapsed+delta)
         stime -= delta
 
+
 def total_length(t):
     return (mixer.Sound(t).get_length())
+
+def book_mark(id_book):
+    global stime, elapsed
+    f = open('lastTimeSave', 'r')
+    elapsed = time.time() - stime
+    f.seek(0)
+    lines = f.read().splitlines()
+    lines[int(id_book)-1] = str(elapsed)
+    f1 = open('lastTimeSave', 'w+')
+    f1.write('\n'.join(lines))
+
+def open_book_mark(id_book):
+    f = open('lastTimeSave', 'r+')
+    f.seek(0)
+    lines = f.read().splitlines()
+    mixer.music.play(start=float(lines[int(id_book)-1]))
+
+#def open_last_book():

@@ -34,14 +34,13 @@ class BookManager:
         with open(filename, 'r', encoding='UTF-8') as file:
             for line in file:
                 agrs = line.split(' - ')
-                tt = tt + 1
-                # Tên sản phẩm - tác giả - thể loại - thời lượng - đường dẫn tới speech file
-                index = tt
-                name = agrs[0]
-                author = agrs[1]
-                bookType = agrs[2]
-                length = agrs[3]
-                dir = agrs[4][:-1]
+                # index - tên sản phẩm - tác giả - thể loại - thời lượng - đường dẫn tới speech file
+                index = agrs[0]
+                name = agrs[1]
+                author = agrs[2]
+                bookType = agrs[3]
+                length = agrs[4]
+                dir = agrs[5][:-1]
                 book = Book(index, name, author, bookType, length, dir)
                 self.addBook(book)
     def addBook(self, book):

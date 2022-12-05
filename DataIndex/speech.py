@@ -41,3 +41,7 @@ while True:
         increase_volume()
     elif query == 'dv':
         decrease_volume()
+    elif query == 'bm':
+        book_mark(book.index)
+    elif query == 'ob':
+        open_book_mark(book.index)
