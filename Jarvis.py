@@ -85,14 +85,14 @@ class Jarvis:
         else:
             return False
 
-    def open_google_and_search(self, text):
-        search_for = text.split("search", 1)[1]
-        self.speak('Okay!')
-        driver = webdriver.Chrome(path)
-        driver.get("http://www.google.com")
-        que = driver.find_element_by_xpath("//input[@name='q']")
-        que.send_keys(str(search_for))
-        que.send_keys(Keys.RETURN)
+   # def open_google_and_search(self, text):
+    #    search_for = text.split("search", 1)[1]
+     #   self.speak('Okay!')
+      #  driver = webdriver.Chrome(path)
+       # driver.get("http://www.google.com")
+        #que = driver.find_element_by_xpath("//input[@name='q']")
+        #que.send_keys(str(search_for))
+        #que.send_keys(Keys.RETURN)
 
     def read_news(self):
         self.speak("What news")
