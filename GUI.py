@@ -42,18 +42,25 @@ def open_folder():
                 playlist.insert(END,song)
 """
 convert_song_length='00:00'
+current_song = None
 def play_song():
+    global current_song, stime, is_paused, elapsed
     os.chdir(path=playlistDir)
     file_dir = playlist.get(ACTIVE).split(" - ")[2]
     #music_name=playlist.get(ACTIVE)
-    mixer.music.load(file_dir)
-    if (stime==None):
+    if (file_dir != current_song):
+        print("xd")
+        mixer.music.load(file_dir)
+        current_song = file_dir
         play()
-        print(stime)
-    if (is_paused==False and stime):
+        is_paused = False
+    elif (is_paused==False):
         pause()
-    if (is_paused==True and stime):
+        is_paused = True
+        print(is_paused)
+    else:
         resume()
+        is_paused = False
     #music.config(text=music_name[0:-4])
     #get song length
     song_length=mixer.Sound(file_dir).get_length()
