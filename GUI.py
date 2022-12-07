@@ -48,10 +48,10 @@ def play_song():
     os.chdir(path=playlistDir)
     file_dir = playlist.get(ACTIVE).split(" - ")[2]
     #music_name=playlist.get(ACTIVE)
-    if (file_dir != current_song):
+    if (playlist.get(ACTIVE) != current_song):
         print("xd")
         mixer.music.load(file_dir)
-        current_song = file_dir
+        current_song = playlist.get(ACTIVE)
         play()
         is_paused = False
     elif (is_paused==False):
@@ -62,7 +62,7 @@ def play_song():
         resume()
         is_paused = False
     #music.config(text=music_name[0:-4])
-    #get song length
+    #get song length''
     song_length=mixer.Sound(file_dir).get_length()
     global convert_song_length
     convert_song_length=time.strftime('%M:%S',time.gmtime(song_length))
