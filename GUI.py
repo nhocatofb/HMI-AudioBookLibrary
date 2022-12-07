@@ -42,29 +42,41 @@ def open_folder():
                 playlist.insert(END,song)
 """
 convert_song_length='00:00'
+current_song = None
+song_length=None
+new_Song=False
 def play_song():
+    global current_song, stime, is_paused, elapsed,song_length,new_Song
     os.chdir(path=playlistDir)
-    file_dir = playlist.get(ACTIVE).split(" - ")[2]
+    file_dir = playlist.get(ANCHOR).split(" - ")[2]
     #music_name=playlist.get(ACTIVE)
-    mixer.music.load(file_dir)
-    if (stime==None):
+    if (playlist.get(ANCHOR) != current_song):
+        mixer.music.load(file_dir)
+        current_song = playlist.get(ANCHOR)
         play()
-        print(stime)
-    if (is_paused==False and stime):
+        stime=time.time()
+        new_Song=True
+        is_paused = False
+    elif (is_paused==False):
         pause()
-    if (is_paused==True and stime):
+        is_paused = True
+    else:
         resume()
+        is_paused = False
     #music.config(text=music_name[0:-4])
-    #get song length
+    #get song length''
     song_length=mixer.Sound(file_dir).get_length()
     global convert_song_length
     convert_song_length=time.strftime('%M:%S',time.gmtime(song_length))
-    #print(time.strftime('%H:%M:%S',time.gmtime(convert_song_length)))
     play_time()
+ 
 #Grab song length
+current_time=0
 def play_time():
+    global stime,current_time
     #get current time
-    current_time=mixer.music.get_pos()/1000
+    if (new_Song):
+        current_time=mixer.music.get_pos()/1000
     #convert to time format
     convert=time.strftime('%M:%S',time.gmtime(current_time))
     #get current song length
@@ -73,6 +85,51 @@ def play_time():
     status_bar.config(text=f'Time Elapsed: {convert} of {convert_song_length}')
     #update time
     status_bar.after(1000,play_time)
+
+def up_song():
+    #print(playlist.get(playlist.curselection()))
+    for i in playlist.curselection():
+        print(i)
+        if (i>0):
+            playlist.selection_clear(0,END)
+            playlist.selection_set(i-1)
+            playlist.see(i-1)
+            playlist.activate(i-1)
+            playlist.selection_anchor(i-1)
+            play_song()
+
+def down_song():
+    for i in playlist.curselection():
+        print(i)
+        if (i<playlist.size()-1):
+            playlist.selection_clear(0,END)
+            playlist.selection_set(i+1)
+            playlist.see(i+1)
+            playlist.activate(i+1)
+            playlist.selection_anchor(i+1)
+            play_song()
+
+def backward_song():
+    global current_song, stime, is_paused, elapsed,current_time,new_Song
+    if stime and not is_paused:
+        elapsed=time.time()-stime
+        delta=min(elapsed,5)
+        mixer.music.play(start=elapsed-delta)
+        current_time=elapsed-delta
+        new_Song=False
+        play_time()
+        stime += delta
+
+def forward_song():
+    global current_song, stime, is_paused, elapsed,current_time,new_Song
+    if stime and not is_paused:
+        elapsed = time.time() - stime
+        delta = min(song_length- elapsed , 5)
+        mixer.music.play(start=elapsed+delta)
+        current_time=elapsed+delta
+        new_Song=False
+        play_time()
+        stime -= delta
 #name
 status_bar=Label(root,text="",bd=0,relief=GROOVE,anchor=E,fg="black",bg="white")
 status_bar.place(x=200,y=260)
@@ -86,17 +143,17 @@ Label(root,image=Circle,bg="white",height=220,width=290).place(x=49,y=300)
 play_button=PhotoImage(file="play.png")
 Button(root,image=play_button,height=50,width=50,command=play_song,background="white",bd=0).place(x=170,y=383)
 
-slow_button=PhotoImage(file="slow.png")
-Button(root,image=slow_button,height=50,width=50,bd=0,background="white").place(x=90,y=381)
+backward_button=PhotoImage(file="slow.png")
+Button(root,image=backward_button,height=50,width=50,bd=0,background="white",command=backward_song).place(x=90,y=381)
 
-fast_button=PhotoImage(file="fast.png")
-Button(root,image=fast_button,height=50,width=50,bd=0,background="white").place(x=250,y=383)
+forward_button=PhotoImage(file="fast.png")
+Button(root,image=forward_button,height=50,width=50,bd=0,background="white",command=forward_song).place(x=250,y=383)
 
 up=PhotoImage(file="up.png")
-Button(root,image=up,height=50,width=50,bd=0,background="white").place(x=170,y=312)
+Button(root,image=up,height=50,width=50,bd=0,background="white",command=up_song).place(x=170,y=312)
 
 down=PhotoImage(file="down.png")
-Button(root,image=down,height=50,width=50,bd=0,background="white").place(x=170,y=460)
+Button(root,image=down,height=50,width=50,bd=0,background="white",command=down_song).place(x=170,y=460)
 
 # menu
 # Menu=PhotoImage(file="menu.png")
@@ -113,7 +170,6 @@ playlist.pack(side=LEFT,fill=BOTH)
 #initial songs
 current=rd.BookManager()
 for i in current.books:
-    print(i.getName()," ",i.getDir())
     # print(i.getName()," ",i.getDir())
     playlist.insert(END,i.getName() + " - " + i.getAuthor() + " - " + i.getDir())
 
