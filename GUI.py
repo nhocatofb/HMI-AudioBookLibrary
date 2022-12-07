@@ -8,7 +8,7 @@ from DataIndex import readData as rd
 from DataIndex.appFunction import *
 root=Tk()
 root.title("GUI")
-root.geometry("390x524")
+root.geometry("390x570")
 root.configure(bg='white')
 root.resizable(False, False)
 
@@ -44,17 +44,19 @@ def open_folder():
 convert_song_length='00:00'
 def play_song():
     os.chdir(path=playlistDir)
+    file_dir = playlist.get(ACTIVE).split(" - ")[2]
     #music_name=playlist.get(ACTIVE)
-    mixer.music.load(playlist.get(ACTIVE))
+    mixer.music.load(file_dir)
     if (stime==None):
         play()
+        print(stime)
     if (is_paused==False and stime):
         pause()
     if (is_paused==True and stime):
         resume()
     #music.config(text=music_name[0:-4])
     #get song length
-    song_length=mixer.Sound(playlist.get(ACTIVE)).get_length()
+    song_length=mixer.Sound(file_dir).get_length()
     global convert_song_length
     convert_song_length=time.strftime('%M:%S',time.gmtime(song_length))
     #print(time.strftime('%H:%M:%S',time.gmtime(convert_song_length)))
@@ -78,15 +80,17 @@ status_bar.place(x=200,y=260)
 image_icon=PhotoImage(file="book.PNG")
 root.iconphoto(False,image_icon)
 
+Circle=PhotoImage(file="round.png")
+Label(root,image=Circle,bg="white",height=220,width=290).place(x=49,y=300)
 #button
 play_button=PhotoImage(file="play.png")
 Button(root,image=play_button,height=50,width=50,command=play_song,background="white",bd=0).place(x=170,y=383)
 
 slow_button=PhotoImage(file="slow.png")
-Button(root,image=slow_button,height=50,width=50,bd=0,background="white").place(x=84,y=383)
+Button(root,image=slow_button,height=50,width=50,bd=0,background="white").place(x=90,y=381)
 
 fast_button=PhotoImage(file="fast.png")
-Button(root,image=fast_button,height=50,width=50,bd=0,background="white").place(x=256,y=383)
+Button(root,image=fast_button,height=50,width=50,bd=0,background="white").place(x=250,y=383)
 
 up=PhotoImage(file="up.png")
 Button(root,image=up,height=50,width=50,bd=0,background="white").place(x=170,y=312)
@@ -110,6 +114,7 @@ playlist.pack(side=LEFT,fill=BOTH)
 current=rd.BookManager()
 for i in current.books:
     print(i.getName()," ",i.getDir())
-    playlist.insert(END,i.getDir())
+    # print(i.getName()," ",i.getDir())
+    playlist.insert(END,i.getName() + " - " + i.getAuthor() + " - " + i.getDir())
 
 root.mainloop()
