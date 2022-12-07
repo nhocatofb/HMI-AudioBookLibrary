@@ -44,8 +44,9 @@ def open_folder():
 convert_song_length='00:00'
 def play_song():
     os.chdir(path=playlistDir)
+    file_dir = playlist.get(ACTIVE).split(" - ")[2]
     #music_name=playlist.get(ACTIVE)
-    mixer.music.load(playlist.get(ACTIVE))
+    mixer.music.load(file_dir)
     if (stime==None):
         play()
     if (is_paused==False and stime):
@@ -54,7 +55,7 @@ def play_song():
         resume()
     #music.config(text=music_name[0:-4])
     #get song length
-    song_length=mixer.Sound(playlist.get(ACTIVE)).get_length()
+    song_length=mixer.Sound(file_dir).get_length()
     global convert_song_length
     convert_song_length=time.strftime('%M:%S',time.gmtime(song_length))
     #print(time.strftime('%H:%M:%S',time.gmtime(convert_song_length)))
@@ -109,7 +110,7 @@ playlist.pack(side=LEFT,fill=BOTH)
 #initial songs
 current=rd.BookManager()
 for i in current.books:
-    print(i.getName()," ",i.getDir())
-    playlist.insert(END,i.getDir())
+    # print(i.getName()," ",i.getDir())
+    playlist.insert(END,i.getName() + " - " + i.getAuthor() + " - " + i.getDir())
 
 root.mainloop()
