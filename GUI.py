@@ -96,7 +96,7 @@ def play_time():
         status_bar.after(1000,play_time)
         new=mixer.music.get_pos()/1000
         print(new,old)
-        if (new-old>=1):
+        if (new-old>=1 or old==0):
             current_time=current_time + 1
             old=new
 
