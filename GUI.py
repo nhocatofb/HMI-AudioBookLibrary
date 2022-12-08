@@ -204,6 +204,10 @@ Button(root,image=up,height=50,width=50,bd=0,background="white",command=up_song)
 down=PhotoImage(file="down.png")
 Button(root,image=down,height=50,width=50,bd=0,background="white",command=down_song).place(x=170,y=460)
 
+line=PhotoImage(file="line.png")
+Button(root,image=line,command=increase_volume).place(x=10,y=287)
+Button(root,image=line,command=decrease_volume).place(x=10,y=390)
+Button(root,image=line).place(x=375,y=348)
 # menu
 # Menu=PhotoImage(file="menu.png")
 # Label(root,image=Menu,bg='gray').pack(padx=10,pady=50,side=LEFT)
