@@ -83,7 +83,9 @@ def play_time():
     if current_time>=song_length:
         current_time=0
         play_song()
-    print(current_time,old)
+    if old == 0:
+        current_time = mixer.music.get_pos()/1000
+    # print(current_time,old)
     #convert to time format
     convert=time.strftime('%M:%S',time.gmtime(current_time))
     #get current song length
@@ -92,11 +94,11 @@ def play_time():
     status_bar.config(text=f'Time Elapsed: {convert} of {convert_song_length}')
     #update time
     if not is_paused:
-        print("playy")
+        # print("playy")
         status_bar.after(1000,play_time)
         new=mixer.music.get_pos()/1000
         print(new,old)
-        if (new-old>=1 or old==0):
+        if (new-old>=0.5 or old==0):
             current_time=current_time + 1
             old=new
 
@@ -104,7 +106,7 @@ def up_song():
     global current_time
     #print(playlist.get(playlist.curselection()))
     for i in playlist.curselection():
-        print(i)
+        # print(i)
         if (i>0):
             playlist.selection_clear(0,END)
             playlist.selection_set(i-1)
@@ -150,8 +152,8 @@ def backward_song():
         elapsed=current_time
         delta=min(elapsed,5)
         mixer.music.play(start=elapsed-delta)
-        old=0
-        current_time=elapsed-delta-1
+        old=0.1
+        current_time=max(elapsed-delta-1,0)
 
 def forward_song():
     global current_song, is_paused, elapsed,current_time, old
@@ -159,8 +161,8 @@ def forward_song():
         elapsed = current_time
         delta = min(song_length- elapsed , 5)
         mixer.music.play(start=elapsed+delta)
-        old=0
-        current_time=elapsed+delta-1
+        old=0.1
+        current_time=min(elapsed+delta-1, song_length)
 
 #play/pause
 play_icon=PhotoImage(file="play_icon.png")
