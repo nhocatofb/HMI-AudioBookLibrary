@@ -45,6 +45,8 @@ convert_song_length='00:00'
 current_song = None
 song_length=None
 current_time=0
+is_new_song = False
+
 def play_song():
     print("play")
     global current_song, stime, is_paused, elapsed,song_length,current_time, old
@@ -79,9 +81,14 @@ def play_song():
 current_time=0
 old=0
 def play_time():
-    global stime,current_time, song_length, is_paused, old
+    global stime,current_time, song_length, is_paused, old, is_new_song, current_song
+    if is_new_song:
+        is_new_song = False
+        return
     if current_time>=song_length:
         current_time=0
+        is_new_song = True
+        current_song = None
         play_song()
     if old == 0:
         current_time = mixer.music.get_pos()/1000
@@ -104,7 +111,8 @@ def play_time():
             old=new
 
 def up_song():
-    global current_time
+    global current_time, is_new_song
+    is_new_song = True
     #print(playlist.get(playlist.curselection()))
     for i in playlist.curselection():
         # print(i)
@@ -127,7 +135,8 @@ def up_song():
 
 
 def down_song():
-    global current_time
+    global current_time, is_new_song
+    is_new_song = True
     for i in playlist.curselection():
         print(i)
         if (i<playlist.size()-1):
