@@ -46,7 +46,8 @@ current_song = None
 song_length=None
 current_time=0
 def play_song():
-    global current_song, stime, is_paused, elapsed,song_length,current_time
+    print("play")
+    global current_song, stime, is_paused, elapsed,song_length,current_time, old
     os.chdir(path=playlistDir)
     file_dir = playlist.get(ANCHOR).split(" - ")[2]
     #music_name=playlist.get(ACTIVE)
@@ -58,6 +59,7 @@ def play_song():
         stime=time.time()
         is_paused = False
         current_time=0
+        old=0
     elif (is_paused==False):
         pause()
         Label(root,image=pause_icon,height=30,width=30).place(x=180,y=260)
@@ -75,15 +77,13 @@ def play_song():
  
 #Grab song length
 current_time=0
+old=0
 def play_time():
-    global stime,current_time, song_length, is_paused
-    #get current time
-    if not is_paused:
-        current_time=current_time + 1
+    global stime,current_time, song_length, is_paused, old
     if current_time>=song_length:
         current_time=0
         play_song()
-    print(current_time,mixer.music.get_pos()/1000)
+    print(current_time,old)
     #convert to time format
     convert=time.strftime('%M:%S',time.gmtime(current_time))
     #get current song length
@@ -92,9 +92,16 @@ def play_time():
     status_bar.config(text=f'Time Elapsed: {convert} of {convert_song_length}')
     #update time
     if not is_paused:
+        print("playy")
         status_bar.after(1000,play_time)
+        new=mixer.music.get_pos()/1000
+        print(new,old)
+        if (new-old>=1):
+            current_time=current_time + 1
+            old=new
 
 def up_song():
+    global current_time
     #print(playlist.get(playlist.curselection()))
     for i in playlist.curselection():
         print(i)
@@ -104,6 +111,7 @@ def up_song():
             playlist.see(i-1)
             playlist.activate(i-1)
             playlist.selection_anchor(i-1)
+            current_time=0
             play_song()
         elif i==0:
             playlist.selection_clear(0,END)
@@ -111,10 +119,12 @@ def up_song():
             playlist.see(playlist.size()-1)
             playlist.activate(playlist.size()-1)
             playlist.selection_anchor(playlist.size()-1)
+            current_time=0
             play_song()
 
 
 def down_song():
+    global current_time
     for i in playlist.curselection():
         print(i)
         if (i<playlist.size()-1):
@@ -123,6 +133,7 @@ def down_song():
             playlist.see(i+1)
             playlist.activate(i+1)
             playlist.selection_anchor(i+1)
+            current_time=0
             play_song()
         elif (i==playlist.size()-1):
             playlist.selection_clear(0,END)
@@ -130,22 +141,25 @@ def down_song():
             playlist.see(0)
             playlist.activate(0)
             playlist.selection_anchor(0)
+            current_time=0
             play_song()
 
 def backward_song():
-    global is_paused, elapsed,current_time
+    global is_paused, elapsed,current_time, old
     if not is_paused:
         elapsed=current_time
         delta=min(elapsed,5)
         mixer.music.play(start=elapsed-delta)
+        old=0
         current_time=elapsed-delta-1
 
 def forward_song():
-    global current_song, is_paused, elapsed,current_time
+    global current_song, is_paused, elapsed,current_time, old
     if not is_paused:
         elapsed = current_time
         delta = min(song_length- elapsed , 5)
         mixer.music.play(start=elapsed+delta)
+        old=0
         current_time=elapsed+delta-1
 
 #play/pause
