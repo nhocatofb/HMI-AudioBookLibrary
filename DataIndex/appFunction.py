@@ -79,7 +79,10 @@ def open_book_mark(id_book):
     lines = f.read().splitlines()
     mixer.music.play(start=float(lines[int(id_book)-1]))
 
-def book_infor(id_book):
-    Jarvis.speak({id_book.name})
+def book_infor(name, author, book_type):
+    info = "Tên sách " + name + " tác giả " + author + " thể loại " + book_type
+    jarvis = Jarvis()
+    jarvis.speak(info)
+
 #def open_last_book():
 
