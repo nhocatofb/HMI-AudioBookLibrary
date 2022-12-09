@@ -1,5 +1,7 @@
 import time
+from Jarvis import Jarvis
 from pygame import mixer
+
 
 stime = None
 is_paused = False
@@ -76,4 +78,7 @@ def open_book_mark(id_book):
     lines = f.read().splitlines()
     mixer.music.play(start=float(lines[int(id_book)-1]))
 
+def book_infor(id_book):
+    Jarvis.speak({id_book.name})
 #def open_last_book():
+

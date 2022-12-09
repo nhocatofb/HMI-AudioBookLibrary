@@ -45,3 +45,5 @@ while True:
         book_mark(book.index)
     elif query == 'ob':
         open_book_mark(book.index)
+    elif query == 'bi':
+        book_infor(book.index)
