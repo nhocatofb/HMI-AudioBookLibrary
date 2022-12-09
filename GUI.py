@@ -8,7 +8,7 @@ from DataIndex import readData as rd
 from DataIndex.appFunction import *
 root=Tk()
 root.title("GUI")
-root.geometry("390x570")
+root.geometry("390x600")
 root.configure(bg='white')
 root.resizable(False, False)
 
@@ -98,7 +98,7 @@ def play_time():
     #get current song length
 
     #show time in status bar
-    status_bar.config(text=f'Time Elapsed: {convert} of {convert_song_length}')
+    status_bar.config(text=f'{convert} of {convert_song_length}')
     #update time
     if not is_paused:
         # print("playy")
@@ -111,7 +111,7 @@ def play_time():
             old=new
 
 def up_song():
-    global current_time, is_new_song
+    global current_time, is_new_song, current_song
     is_new_song = True
     #print(playlist.get(playlist.curselection()))
     for i in playlist.curselection():
@@ -123,7 +123,12 @@ def up_song():
             playlist.activate(i-1)
             playlist.selection_anchor(i-1)
             current_time=0
-            play_song()
+            pause()
+            current_song=None
+            Label(root,image=pause_icon,height=30,width=30).place(x=180,y=260)
+            is_new_song=True
+            play_time()
+            #play_song()
         elif i==0:
             playlist.selection_clear(0,END)
             playlist.selection_set(playlist.size()-1)
@@ -131,11 +136,16 @@ def up_song():
             playlist.activate(playlist.size()-1)
             playlist.selection_anchor(playlist.size()-1)
             current_time=0
-            play_song()
+            pause()
+            current_song=None
+            Label(root,image=pause_icon,height=30,width=30).place(x=180,y=260)
+            is_new_song=True
+            play_time()
+            #play_song()
 
 
 def down_song():
-    global current_time, is_new_song
+    global current_time, is_new_song, current_song
     is_new_song = True
     for i in playlist.curselection():
         print(i)
@@ -146,7 +156,12 @@ def down_song():
             playlist.activate(i+1)
             playlist.selection_anchor(i+1)
             current_time=0
-            play_song()
+            pause()
+            current_song=None
+            Label(root,image=pause_icon,height=30,width=30).place(x=180,y=260)
+            is_new_song=True
+            play_time()
+            #play_song()
         elif (i==playlist.size()-1):
             playlist.selection_clear(0,END)
             playlist.selection_set(0)
@@ -154,7 +169,12 @@ def down_song():
             playlist.activate(0)
             playlist.selection_anchor(0)
             current_time=0
-            play_song()
+            pause()
+            current_song=None
+            Label(root,image=pause_icon,height=30,width=30).place(x=180,y=260)
+            is_new_song=True
+            play_time()
+            #play_song()
 
 def backward_song():
     global is_paused, elapsed,current_time, old
@@ -182,32 +202,36 @@ pause_icon=PhotoImage(file="pause_icon.png")
 #time
 status_bar=Label(root,text="",bd=0,relief=GROOVE,anchor=E,fg="black",bg="white")
 status_bar.place(x=220,y=260)
+
+#line
+line1=PhotoImage(file="line1.png")
+Label(root,image=line1,bg="white",bd=0).place(x=0,y=305)
 #icon
 image_icon=PhotoImage(file="book.PNG")
 root.iconphoto(False,image_icon)
 
 Circle=PhotoImage(file="round.png")
-Label(root,image=Circle,bg="white",height=220,width=290).place(x=49,y=300)
+Label(root,image=Circle,bg="white",height=230,width=290).place(x=49,y=345)
 #button
 play_button=PhotoImage(file="play.png")
-Button(root,image=play_button,height=50,width=50,command=play_song,background="white",bd=0).place(x=170,y=383)
+Button(root,image=play_button,height=50,width=50,command=play_song,background="white",bd=0).place(x=170,y=433)
 
 backward_button=PhotoImage(file="slow.png")
-Button(root,image=backward_button,height=50,width=50,bd=0,background="white",command=backward_song).place(x=90,y=381)
+Button(root,image=backward_button,height=50,width=50,bd=0,background="white",command=backward_song).place(x=90,y=431)
 
 forward_button=PhotoImage(file="fast.png")
-Button(root,image=forward_button,height=50,width=50,bd=0,background="white",command=forward_song).place(x=250,y=383)
+Button(root,image=forward_button,height=50,width=50,bd=0,background="white",command=forward_song).place(x=250,y=433)
 
 up=PhotoImage(file="up.png")
-Button(root,image=up,height=50,width=50,bd=0,background="white",command=up_song).place(x=170,y=312)
+Button(root,image=up,height=50,width=50,bd=0,background="white",command=up_song).place(x=170,y=362)
 
 down=PhotoImage(file="down.png")
-Button(root,image=down,height=50,width=50,bd=0,background="white",command=down_song).place(x=170,y=460)
+Button(root,image=down,height=50,width=50,bd=0,background="white",command=down_song).place(x=170,y=504)
 
 line=PhotoImage(file="line.png")
-Button(root,image=line,command=increase_volume).place(x=10,y=287)
-Button(root,image=line,command=decrease_volume).place(x=10,y=390)
-Button(root,image=line).place(x=375,y=348)
+Button(root,image=line,command=increase_volume).place(x=10,y=337)
+Button(root,image=line,command=decrease_volume).place(x=10,y=450)
+Button(root,image=line).place(x=375,y=398)
 # menu
 # Menu=PhotoImage(file="menu.png")
 # Label(root,image=Menu,bg='gray').pack(padx=10,pady=50,side=LEFT)
@@ -215,7 +239,7 @@ music_frame = Frame(root, bd=2, relief=RIDGE)
 music_frame.place(x=0, y=0, width=390, height=250)
 
 scroll=Scrollbar(music_frame)
-playlist=Listbox(music_frame,width=100,font=("arial",10),bg='white',fg='red',cursor="hand2",yscrollcommand=scroll.set)
+playlist=Listbox(music_frame,width=100,font=("arial",10),bg='white',fg='black',cursor="hand2",yscrollcommand=scroll.set)
 scroll.config(command=playlist.yview)
 scroll.pack(side=RIGHT,fill=Y)
 playlist.pack(side=LEFT,fill=BOTH)
