@@ -1,11 +1,11 @@
 import time
-from Jarvis import Jarvis
-from pygame import mixer
 
+from pygame import mixer
 
 stime = None
 is_paused = False
 elapsed = 0
+
 
 def play():
     global stime, is_paused
@@ -13,13 +13,14 @@ def play():
     stime = time.time()
     is_paused = False
 
+
 def pause():
     global is_paused, stime, elapsed
     now = time.time()
     elapsed = now - stime
     mixer.music.pause()
     is_paused = True
-    print(is_paused)
+
 
 def resume():
     global is_paused, stime, elapsed
@@ -28,8 +29,10 @@ def resume():
     is_paused = False
     stime = now - elapsed
 
+
 def exit():
     mixer.music.stop()
+
 
 # Volume is a value from 0.0 to 1.0 representing the volume for this Sound.
 # So I will set it in range 0 -> 10, increase 1 or decrease 1
@@ -38,10 +41,14 @@ def increase_volume():
     current_volume = mixer.music.get_volume()
     print(current_volume)
     mixer.music.set_volume(min(current_volume + 0.1, 1))
+
+
 def decrease_volume():
     current_volume = mixer.music.get_volume()
     print(current_volume)
-    mixer.music.set_volume(max(0,current_volume - 0.1))
+    mixer.music.set_volume(max(0, current_volume - 0.1))
+
+
 def backward(x):
     global stime, is_paused, elapsed
     if stime and not is_paused:
@@ -49,40 +56,38 @@ def backward(x):
         delta = min(elapsed, x)
         # pygame.mixer.music.rewind()
         # pygame.mixer.music.set_pos(elapsed - delta)
-        mixer.music.play(start=elapsed-delta)
+        mixer.music.play(start=elapsed - delta)
         stime += delta
+
+
 def forward(x, total_length):
     global stime, is_paused, elapsed
     if not is_paused:
         elapsed = time.time() - stime
-        delta = min(total_length - elapsed , x)
-        mixer.music.play(start=elapsed+delta)
+        delta = min(total_length - elapsed, x)
+        mixer.music.play(start=elapsed + delta)
         stime -= delta
 
 
 def total_length(t):
     return (mixer.Sound(t).get_length())
 
+
 def book_mark(id_book):
     global stime, elapsed
-    f = open('lastTimeSave', 'r')
+    f = open('C:/Users/nhoca/PycharmProjects/HMI-AudioBookLibrary/DataIndex/lastTimeSave.txt', 'r')
     elapsed = time.time() - stime
     f.seek(0)
     lines = f.read().splitlines()
-    lines[int(id_book)-1] = str(elapsed)
-    f1 = open('lastTimeSave', 'w+')
+    lines[int(id_book) - 1] = str(elapsed)
+    f1 = open('C:/Users/nhoca/PycharmProjects/HMI-AudioBookLibrary/DataIndex/lastTimeSave.txt', 'w')
     f1.write('\n'.join(lines))
 
+
 def open_book_mark(id_book):
-    f = open('lastTimeSave', 'r+')
+    f = open('C:/Users/nhoca/PycharmProjects/HMI-AudioBookLibrary/DataIndex/lastTimeSave.txt', 'r')
     f.seek(0)
     lines = f.read().splitlines()
-    mixer.music.play(start=float(lines[int(id_book)-1]))
+    mixer.music.play(start=float(lines[int(id_book) - 1]))
 
-def book_infor(name, author, book_type):
-    info = "Tên sách " + name + " tác giả " + author + " thể loại " + book_type
-    jarvis = Jarvis()
-    jarvis.speak(info)
-
-#def open_last_book():
-
+# def open_last_book():
