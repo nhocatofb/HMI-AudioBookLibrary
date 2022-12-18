@@ -75,17 +75,17 @@ def total_length(t):
 
 def book_mark(id_book):
     global stime, elapsed
-    f = open('C:/Users/nhoca/PycharmProjects/HMI-AudioBookLibrary/DataIndex/lastTimeSave.txt', 'r')
+    f = open('./DataIndex/lastTimeSave.txt', 'r')
     elapsed = time.time() - stime
     f.seek(0)
     lines = f.read().splitlines()
     lines[int(id_book) - 1] = str(elapsed)
-    f1 = open('C:/Users/nhoca/PycharmProjects/HMI-AudioBookLibrary/DataIndex/lastTimeSave.txt', 'w')
+    f1 = open('./DataIndex/lastTimeSave.txt', 'w')
     f1.write('\n'.join(lines))
 
 
 def open_book_mark(id_book):
-    f = open('C:/Users/nhoca/PycharmProjects/HMI-AudioBookLibrary/DataIndex/lastTimeSave.txt', 'r')
+    f = open('./DataIndex/lastTimeSave.txt', 'r')
     f.seek(0)
     lines = f.read().splitlines()
     mixer.music.play(start=float(lines[int(id_book) - 1]))
