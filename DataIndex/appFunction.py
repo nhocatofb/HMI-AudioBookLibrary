@@ -17,7 +17,8 @@ def play():
 def pause():
     global is_paused, stime, elapsed
     now = time.time()
-    elapsed = now - stime
+    if (stime != None):
+        elapsed = now - stime
     mixer.music.pause()
     is_paused = True
 
